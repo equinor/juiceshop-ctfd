@@ -1,0 +1,23 @@
+balancer:
+  cookie:
+    secure: true
+  skipOwnerReference: true
+juiceShop:
+  maxinstance: 30
+  tag: v14.3.0
+  securityContext:
+    runAsUser: 65532
+    runAsGroup: 65532
+    fsGroup: 65532
+  config: |
+    application:
+      logo: https://raw.githubusercontent.com/iteratec/multi-juicer/main/images/multijuicer-icon-only-padding.png
+      favicon: https://raw.githubusercontent.com/iteratec/multi-juicer/main/juice-balancer/ui/public/favicon.ico
+      showVersionNumber: false
+      showGitHubLinks: false
+    challenges:
+      showHints: true
+    hackingInstructor:
+      isEnabled: true
+    ctf:
+      showFlagsInNotifications: true
