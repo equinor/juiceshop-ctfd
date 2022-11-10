@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ctfd
+  labels:
+    app: ctfd
+spec:
+  selector:
+    matchLabels:
+      app: ctfd
+  template:
+    metadata:
+      labels:
+        app: ctfd
+        deployment: ctfd
+    spec:
+      containers:
+        - name: ctfd
+          image: docker.io/ctfd/ctfd:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+          - secretRef:
+              name: maria-connection
+      securityContext:
+        runAsUser: 1001
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ctfd
+  labels:
+    app: ctfd
+spec:
+  type: ClusterIP
+  selector:
+    app: ctfd
+    deployment: ctfd
+  ports:
+    - name: 8000-tcp
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: ctfd
+  labels:
+    app: ctfd
+spec:
+  to:
+    kind: Service
+    name: ctfd
+    weight: 100
+  port:
+    targetPort: 8000-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
